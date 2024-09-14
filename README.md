@@ -11,7 +11,7 @@ This is a take home assignment
 
 ## Demo
 
-[Screencast from 14-09-24 01:15:21 PM IST.webm](https://github.com/user-attachments/assets/c5c7add1-5de0-4a86-924e-541c28335378)
+
 
 
 
