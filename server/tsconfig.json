@@ -8,5 +8,5 @@
     "rootDir": "./src",
     "noImplicitAny": true
   },
-  "include": ["src/**/*"]
+  "include": ["/api/*.ts", "src/**/*"]
 }

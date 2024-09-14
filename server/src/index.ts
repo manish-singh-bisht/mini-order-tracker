@@ -4,7 +4,7 @@ import { PORT } from "./config/index.js";
 import http from "http";
 import orderRouter from "./routers/orderRouter.js";
 
-const app = express();
+export const app = express();
 
 app.use(compression({ level: 6 }));
 
