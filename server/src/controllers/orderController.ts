@@ -29,11 +29,11 @@ export const getOrders = async (
       return res.status(400).json({ errors: result.array() });
     }
 
-    const { page = 1, limit = 10, customerId, status } = matchedData(req);
+    const { page = 1, limit = 10, email, status } = matchedData(req);
     const skip = (page - 1) * limit;
 
     const customer = await prisma.customer.findUnique({
-      where: { id: customerId },
+      where: { email: email },
       select: { id: true },
     });
 

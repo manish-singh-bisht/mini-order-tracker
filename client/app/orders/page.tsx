@@ -7,9 +7,10 @@ export default async function Page({
     page?: string;
     limit?: string;
     status?: string;
-    customerId: string;
+    email: string;
   };
 }) {
+  //for now just going by this page /orders, but we can do it /orders/[email]
   const page = parseInt(searchParams.page ?? "1", 10);
   const limit = parseInt(searchParams.limit ?? "10", 10);
   const status = searchParams.status ?? "";
@@ -18,7 +19,7 @@ export default async function Page({
     page,
     limit,
     status,
-    searchParams.customerId
+    searchParams.email
   );
 
   return (
@@ -37,9 +38,9 @@ async function fetchOrders(
   page: number,
   limit: number,
   status: string,
-  customerId: string
+  email: string
 ) {
-  const query = `customerId=${customerId}&page=${page}&limit=${limit}${
+  const query = `email=${email}&page=${page}&limit=${limit}${
     status && status.length > 1 ? `&status=${status}` : ""
   }`;
   const res = await fetch(`${API_BASE_URL}/orders?${query}`);

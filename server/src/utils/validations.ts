@@ -1,15 +1,16 @@
 import { Schema } from "express-validator";
 
 export const getOrdersValidationSchema: Schema = {
-  customerId: {
+  email: {
     in: ["query"],
     notEmpty: {
-      errorMessage: "Customer ID is required",
+      errorMessage: "Customer email is required",
     },
-    isUUID: {
-      errorMessage: "Invalid Customer ID format",
+    isEmail: {
+      errorMessage: "Invalid email format",
     },
   },
+
   page: {
     in: ["query"],
     optional: true,
