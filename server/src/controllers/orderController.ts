@@ -7,10 +7,10 @@ import { OrderStatus } from "@prisma/client";
 /**
  * Fetches orders.
  
- * It accepts `customerId` as a required query parameter and can optionally
+ * It accepts `email` as a required query parameter and can optionally
  * take `page`, `limit`, and `status` as query parameters.
  *
- * @param {string} customerId - The ID of the customer whose orders are to be fetched (required).
+ * @param {string} email - The email of the customer whose orders are to be fetched (required).
  * @param {number} [page=1] - The page number for pagination (optional, default is 1).
  * @param {number} [limit=10] - The number of results per page (optional, default is 10).
  * @param {"PENDING" | "CANCELLED" | "FULFILLED" | "FAILED"} [status] - The status of the orders to filter by (optional).
