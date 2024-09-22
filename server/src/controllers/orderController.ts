@@ -14,9 +14,6 @@ import { OrderStatus } from "@prisma/client";
  * @param {number} [page=1] - The page number for pagination (optional, default is 1).
  * @param {number} [limit=10] - The number of results per page (optional, default is 10).
  * @param {"PENDING" | "CANCELLED" | "FULFILLED" | "FAILED"} [status] - The status of the orders to filter by (optional).
- *
- * @returns {Promise<Pagination<Order[]>>} A promise that resolves to an array of `Order` objects.
- * @throws {Error} If the fetch request fails or returns a non-200 HTTP status code, an error will be thrown.
  * **/
 
 export const getOrders = async (
