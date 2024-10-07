@@ -1,5 +1,5 @@
 # mini-order-tracker
-This is a take home assignment
+This is a take home assignment.
 
 
 
