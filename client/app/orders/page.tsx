@@ -11,8 +11,8 @@ export default async function Page({
   };
 }) {
   //for now just going by this page /orders, but we can do it /orders/[email]
-  const page = parseInt(searchParams.page ?? "1", 10);
-  const limit = parseInt(searchParams.limit ?? "10", 10);
+  const page = Math.max(parseInt(searchParams.page ?? "1", 10), 1);
+  const limit = Math.min(parseInt(searchParams.limit ?? "10", 10), 100);
   const status = searchParams.status ?? "";
 
   const { orders, ordersPagination } = await fetchOrders(
@@ -26,7 +26,7 @@ export default async function Page({
     <div className="container mx-auto py-10">
       <OrderTable
         data={orders}
-        pageIndex={ordersPagination.currentPage - 1}
+        page={ordersPagination.currentPage}
         pageSize={ordersPagination.itemsPerPage}
         totalPages={ordersPagination.totalPages}
       />

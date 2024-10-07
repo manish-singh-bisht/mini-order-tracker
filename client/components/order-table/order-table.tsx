@@ -9,14 +9,14 @@ import { columns } from "@/components/order-table/order-column";
 
 interface DataTableProps {
   data: Order[];
-  pageIndex: number;
+  page: number;
   pageSize: number;
   totalPages: number;
 }
 
 export default function OrderTable({
   data,
-  pageIndex,
+  page,
   pageSize,
   totalPages,
 }: DataTableProps) {
@@ -32,7 +32,7 @@ export default function OrderTable({
   ];
 
   const updateUrl = (page: number, limit: number, status?: string) => {
-    params.set("page", (page + 1).toString());
+    params.set("page", page.toString());
     params.set("limit", limit.toString());
     if (status) {
       params.set("status", status);
@@ -46,28 +46,28 @@ export default function OrderTable({
   const pageSizeChangeHandler = (newPageSize: number) => {
     const status = params.get("status");
     if (status) {
-      updateUrl(0, newPageSize, status);
+      updateUrl(1, newPageSize, status);
     } else {
-      updateUrl(0, newPageSize);
+      updateUrl(1, newPageSize);
     }
   };
 
   const nextPageHandler = () => {
-    if (pageIndex < totalPages - 1) {
-      updateUrl(pageIndex + 1, pageSize);
+    if (page < totalPages) {
+      updateUrl(page + 1, pageSize);
     }
   };
 
   const previousPageHandler = () => {
-    if (pageIndex > 0) {
-      updateUrl(pageIndex - 1, pageSize);
+    if (page > 0) {
+      updateUrl(page - 1, pageSize);
     }
   };
 
   const statusChangeHandler = (status: StatusFilteringData) => {
-    if (status === "ALL") updateUrl(0, pageSize);
+    if (status === "ALL") updateUrl(1, pageSize);
     else {
-      updateUrl(0, pageSize, status);
+      updateUrl(1, pageSize, status);
     }
   };
 
@@ -81,14 +81,14 @@ export default function OrderTable({
         <DataTable
           columns={columns}
           data={data}
-          pageIndex={pageIndex}
+          pageIndex={page - 1}
           pageSize={pageSize}
           totalPages={totalPages}
         />
       </div>
 
       <PaginationControls
-        currentPage={pageIndex}
+        currentPage={page - 1}
         pageSize={pageSize}
         totalPages={totalPages}
         pageSizeChangeHandler={pageSizeChangeHandler}
