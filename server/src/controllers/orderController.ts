@@ -5,17 +5,13 @@ import { GetOrdersParams, GetOrdersQuery } from "../utils/types/index.js";
 import { OrderStatus } from "@prisma/client";
 
 /**
- * Fetches orders.
- 
- * It accepts `email` as a required query parameter and can optionally
- * take `page`, `limit`, and `status` as query parameters.
+ * Fetches orders for a specific customer based on email.
  *
- * @param {string} email - The email of the customer whose orders are to be fetched (required).
- * @param {number} [page=1] - The page number for pagination (optional, default is 1).
- * @param {number} [limit=10] - The number of results per page (optional, default is 10).
- * @param {"PENDING" | "CANCELLED" | "FULFILLED" | "FAILED"} [status] - The status of the orders to filter by (optional).
- * **/
-
+ * @param {string} email - Required query parameter for customer email.
+ * @param {number} [page=1] -Optional Page number for pagination (default is 1).
+ * @param {number} [limit=10] -Optional Number of results per page (default is 10, max is 100).
+ * @param {"PENDING" | "CANCELLED" | "FULFILLED" | "FAILED"} [status] - Optional order status filter.
+ **/
 export const getOrders = async (
   req: Request<GetOrdersParams, {}, {}, GetOrdersQuery>,
   res: Response
@@ -27,10 +23,13 @@ export const getOrders = async (
     }
 
     const { page = 1, limit = 10, email, status } = matchedData(req);
-    const skip = (page - 1) * limit;
+
+    const sPage = Math.max(page, 1);
+    const sLimit = Math.min(limit, 100);
+    const skip = (sPage - 1) * sLimit;
 
     const customer = await prisma.customer.findUnique({
-      where: { email: email },
+      where: { email },
       select: { id: true },
     });
 
@@ -46,20 +45,18 @@ export const getOrders = async (
     }
 
     const [totalOrdersCount, orders] = await Promise.all([
-      prisma.order.count({
-        where: orderWhereClause,
-      }),
+      prisma.order.count({ where: orderWhereClause }),
       prisma.order.findMany({
         where: orderWhereClause,
         skip,
-        take: limit,
+        take: sLimit,
         include: {
           customer: {
             select: {
               firstName: true,
               lastName: true,
             },
-          }, //calling order items for future use.
+          },
           orderItems: {
             include: {
               product: {
@@ -77,15 +74,15 @@ export const getOrders = async (
       }),
     ]);
 
-    const totalPages = Math.ceil(totalOrdersCount / limit);
-    const hasNextPage = page < totalPages;
-    const hasPreviousPage = page > 1;
+    const totalPages = Math.ceil(totalOrdersCount / sLimit);
+    const hasNextPage = sPage < totalPages;
+    const hasPreviousPage = sPage > 1;
 
     return res.status(200).json({
       orders,
       pagination: {
-        currentPage: page,
-        itemsPerPage: limit,
+        currentPage: sPage,
+        itemsPerPage: sLimit,
         hasNextPage,
         hasPreviousPage,
         totalOrdersCount,
